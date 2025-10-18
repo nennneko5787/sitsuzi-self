@@ -31,7 +31,7 @@ class AIChatCog(commands.Cog):
         else:
             embeds = [await embedMaker(_embeds, silent=True)]
 
-        await message.reply("".join(embeds))
+        await message.reply(" ".join(embeds))
 
     @commands.command(name="ex", brief="Exモードを設定します。")
     async def exCommand(self, ctx: commands.Context, ex: bool):
