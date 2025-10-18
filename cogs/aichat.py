@@ -9,6 +9,12 @@ from objects.chat import ChatResponse, ChatResponseEx
 from utils.embed import embedMaker
 
 
+def splitByLength(s: str, n: int):
+    "split string by its length"
+    length = len(s)
+    return [s[i : i + n] for i in range(0, length, n)]
+
+
 class AIChatCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -126,11 +132,18 @@ class AIChatCog(commands.Cog):
 
             chat = completion.choices[0].message.parsed
 
-            embed = discord.Embed(
-                title=chat.yourName,
-                description=chat.message,
-                color=discord.Color.from_rgb(chat.color.r, chat.color.g, chat.color.b),
-            )
+            embeds = []
+
+            for char in splitByLength(chat.message):
+                embeds.append(
+                    discord.Embed(
+                        title=chat.yourName,
+                        description=char,
+                        color=discord.Color.from_rgb(
+                            chat.color.r, chat.color.g, chat.color.b
+                        ),
+                    )
+                )
 
             if isinstance(chat, ChatResponseEx):
                 embed2 = discord.Embed(
@@ -147,9 +160,9 @@ class AIChatCog(commands.Cog):
                     ),
                 )
 
-                await self.sendMessage(message, [embed, embed2])
+                await self.sendMessage(message, embeds + [embed2])
             else:
-                await self.sendMessage(message, embed)
+                await self.sendMessage(message, embeds)
 
             self.messages[message.author.id].append(
                 {"role": "assistant", "content": completion.choices[0].message.content}
