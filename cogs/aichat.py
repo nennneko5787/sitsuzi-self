@@ -127,9 +127,10 @@ class AIChatCog(commands.Cog):
             chat = completion.choices[0].message.parsed
 
             embed = discord.Embed(
+                title=chat.yourName,
                 description=chat.message,
                 color=discord.Color.from_rgb(chat.color.r, chat.color.g, chat.color.b),
-            ).set_author(name=chat.yourName)
+            )
 
             if isinstance(chat, ChatResponseEx):
                 embed2 = discord.Embed(
