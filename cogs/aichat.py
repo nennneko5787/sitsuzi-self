@@ -64,6 +64,8 @@ class AIChatCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
+        if message.content.startswith(self.bot.command_prefix):
+            return
         if message.author.id == self.bot.user.id:
             return
         inMentions = any(mention.id == self.bot.user.id for mention in message.mentions)
