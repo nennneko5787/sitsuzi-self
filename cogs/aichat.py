@@ -134,7 +134,7 @@ class AIChatCog(commands.Cog):
 
             embeds = []
 
-            for char in splitByLength(chat.message):
+            for char in splitByLength(chat.message, 100):
                 embeds.append(
                     discord.Embed(
                         title=chat.yourName,
