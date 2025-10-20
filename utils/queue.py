@@ -20,4 +20,4 @@ async def queueLoop():
             else:
                 await message.send(content)
 
-        await asyncio.sleep(2)
+        await asyncio.sleep(5)
