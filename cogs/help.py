@@ -2,24 +2,20 @@
 
 from discord.ext import commands
 
-from utils.queue import messageQueue
-
 
 class HelpCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
     @commands.command(name="help", brief="このBotの使い方。")
-    async def help_command(self, ctx: commands.Context, option: str = None):
+    async def helpCommand(self, ctx: commands.Context, option: str = None):
         # ===============================
         # option あり → 詳細ヘルプ表示
         # ===============================
         if option:
             command = self.bot.all_commands.get(option)
             if not command:
-                await messageQueue.put(
-                    (ctx.message, f"❌ コマンド `{option}` は見つかりませんでした。")
-                )
+                await ctx.message.reply(f"❌ コマンド `{option}` は見つかりませんでした。")
                 return
 
             # 通常コマンドの詳細情報
@@ -53,7 +49,7 @@ class HelpCog(commands.Cog):
                         )
                     help_text += "```"
 
-            await messageQueue.put((ctx.message, help_text))
+            await ctx.message.reply(help_text)
             return
 
         # ===============================
@@ -63,7 +59,7 @@ class HelpCog(commands.Cog):
 
         all_commands = list(self.bot.all_commands.values())
         if not all_commands:
-            await messageQueue.put((ctx.message, "コマンドがありません"))
+            await ctx.message.reply("コマンドがありません")
             return
 
         max_len = max(len(c.name) for c in all_commands)
@@ -97,7 +93,7 @@ class HelpCog(commands.Cog):
 
         helpCommand += "```"
 
-        await messageQueue.put((ctx.message, helpCommand))
+        await ctx.message.reply(helpCommand)
 
 
 async def setup(bot: commands.Bot):
