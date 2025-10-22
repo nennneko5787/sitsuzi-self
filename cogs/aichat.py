@@ -24,6 +24,13 @@ class AIChatCog(commands.Cog):
         self.features: Dict[int, str] = {}
         self.messages: Dict[int, List[Dict[str, str]]] = {}
         self.ex: Dict[int, bool] = {}
+        
+        self.default = """
+            ピンクとパープルのマルチカラーの髪にアホ毛を揺らしながら、左目にアイパッチをつけた元気で愛らしい猫耳の女の子。
+            名前は、天海レム。
+            フリル付きのピンクのシャツに黒いミニスカート、黒リボンとチョーカーを身に着け、猫のように活発に動き回る彼女は、
+            笑顔を絶やさずバーチャルYouTuberとして配信を楽しんでいる。ドジな一面もありながら、その魅力でみんなを惹きつける存在である。
+        """
 
     async def sendMessage(self, message: discord.Message, _embeds: discord.Embed):
         if isinstance(_embeds, list):
@@ -34,7 +41,7 @@ class AIChatCog(commands.Cog):
         await message.reply(" ".join(embeds))
 
     @commands.command(name="ex", brief="Exモードを設定します。")
-    async def exCommand(self, ctx: commands.Context, ex: bool):
+    async def exCommand(self, ctx: commands.Context, *, ex: bool):
         self.ex[ctx.author.id] = ex
         embed = discord.Embed(
             title="Exモードを設定しました。",
@@ -53,9 +60,20 @@ class AIChatCog(commands.Cog):
         )
         await self.sendMessage(ctx.message, embed)
 
+    @commands.command(name="charaAppend", brief="キャラクターの特徴を付け足します。")
+    async def charaAppendCommand(self, ctx: commands.Context, *, feature: str):
+        self.features[ctx.author.id] += feature
+        embed = discord.Embed(
+            title="特徴を設定しました。",
+            description=f"{self.features[ctx.author.id]}",
+            color=discord.Color.green(),
+        )
+        await self.sendMessage(ctx.message, embed)
+
     @commands.command(name="reset", brief="会話履歴をリセットします。")
     async def clearCommand(self, ctx: commands.Context):
         self.messages.pop(ctx.author.id, None)
+        self.features[ctx.author.id] = self.default
         embed = discord.Embed(
             title="会話履歴をリセットしました。",
             color=discord.Color.green(),
@@ -73,14 +91,9 @@ class AIChatCog(commands.Cog):
             return
 
         if message.author.id not in self.messages:
-            self.messages[message.author.id] = []
+             self.messages[message.author.id] = []
             if message.author.id not in self.features:
-                self.features[message.author.id] = """
-                    ピンクとパープルのマルチカラーの髪にアホ毛を揺らしながら、左目にアイパッチをつけた元気で愛らしい猫耳の女の子。
-                    名前は、天海レム。
-                    フリル付きのピンクのシャツに黒いミニスカート、黒リボンとチョーカーを身に着け、猫のように活発に動き回る彼女は、
-                    笑顔を絶やさずバーチャルYouTuberとして配信を楽しんでいる。ドジな一面もありながら、その魅力でみんなを惹きつける存在である。
-                """
+                self.features[message.author.id] = self.default
             self.messages[message.author.id].append(
                 {
                     "role": "system",
@@ -88,7 +101,6 @@ class AIChatCog(commands.Cog):
                     + self.features[message.author.id],
                 }
             )
-            del self.features[message.author.id]
 
         userMessage = {
             "role": "user",
