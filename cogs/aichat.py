@@ -91,7 +91,7 @@ class AIChatCog(commands.Cog):
             return
 
         if message.author.id not in self.messages:
-             self.messages[message.author.id] = []
+            self.messages[message.author.id] = []
             if message.author.id not in self.features:
                 self.features[message.author.id] = self.default
             self.messages[message.author.id].append(
