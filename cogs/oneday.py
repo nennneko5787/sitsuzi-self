@@ -8,7 +8,6 @@ import discord
 from discord.ext import commands
 
 from utils import imageUtils
-from utils.queue import messageQueue
 
 
 class OneDayCog(commands.Cog):
@@ -63,12 +62,7 @@ class OneDayCog(commands.Cog):
     @commands.group(name="oneday", brief="1day-chatのツール類。")
     async def oneDayGroup(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
-            await messageQueue.put(
-                (
-                    ctx.message,
-                    "サブコマンドを指定してね❤",
-                )
-            )
+            await ctx.reply("サブコマンドを指定してね❤")
 
     @oneDayGroup.command(
         name="coinrank", brief="今までのコインロール取得回数のランキング。"
@@ -104,12 +98,7 @@ class OneDayCog(commands.Cog):
             theme,
         )
         file = discord.File(fp=buffer, filename="ranking.png")
-        await messageQueue.put(
-            (
-                ctx.message,
-                file,
-            )
-        )
+        await ctx.reply(file=file)
 
     @oneDayGroup.command(
         name="spdrank", brief="今までのコインロール取得速度のランキング。"
@@ -145,12 +134,7 @@ class OneDayCog(commands.Cog):
             theme,
         )
         file = discord.File(fp=buffer, filename="ranking.png")
-        await messageQueue.put(
-            (
-                ctx.message,
-                file,
-            )
-        )
+        await ctx.reply(file=file)
 
     @oneDayGroup.command(
         name="laterank", brief="今までのコインロール遅刻ポイントのランキング。"
@@ -186,12 +170,7 @@ class OneDayCog(commands.Cog):
             theme,
         )
         file = discord.File(fp=buffer, filename="ranking.png")
-        await messageQueue.put(
-            (
-                ctx.message,
-                file,
-            )
-        )
+        await ctx.reply(file=file)
 
     @oneDayGroup.command(
         name="gayrank", brief="今までゲイロールが付与されたランキング。"
@@ -225,12 +204,7 @@ class OneDayCog(commands.Cog):
             theme,
         )
         file = discord.File(fp=buffer, filename="ranking.png")
-        await messageQueue.put(
-            (
-                ctx.message,
-                file,
-            )
-        )
+        await ctx.reply(file=file)
 
     @commands.Cog.listener()
     async def on_member_update(self, before: discord.Member, after: discord.Member):
@@ -255,9 +229,9 @@ class OneDayCog(commands.Cog):
             return
 
         def check(m: discord.Message):
-            return m.author.id == 1362354606923059322 and m.channel == channel
+            return m.author.id == 1413774474612051978 and m.channel == channel
 
-        message: discord.Message = await self.bot.wait_for("message", check=check)
+        message = await self.bot.wait_for("message", check=check)
 
         before = message.created_at.timestamp()
 
@@ -279,11 +253,8 @@ class OneDayCog(commands.Cog):
         )
 
         asyncio.create_task(
-            await messageQueue.put(
-                (
-                    channel,
-                    f"{message.author.mention} さんが**{self.coin[message.author.id]}**回目のコインロール獲得です！\nタイム: {between}秒",
-                )
+            channel.send(
+                f"{message.author.mention} さんが**{self.coin[message.author.id]}**回目のコインロール獲得です！\nタイム: {between}秒"
             )
         )
 
@@ -293,7 +264,7 @@ class OneDayCog(commands.Cog):
             )
 
         try:
-            msg1: discord.Message = await self.bot.wait_for("message", check=check)
+            msg1 = await self.bot.wait_for("message", check=check)
 
             if msg1.author.id not in self.lateness:
                 self.lateness[msg1.author.id] = 0
@@ -310,7 +281,7 @@ class OneDayCog(commands.Cog):
             )
 
         try:
-            msg2: discord.Message = await self.bot.wait_for("message", check=check)
+            msg2 = await self.bot.wait_for("message", check=check)
 
             if msg2.author.id not in self.lateness:
                 self.lateness[msg2.author.id] = 0
