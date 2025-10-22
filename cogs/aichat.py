@@ -63,7 +63,7 @@ class AIChatCog(commands.Cog):
     @commands.command(name="charaAppend", brief="キャラクターの特徴を付け足します。")
     async def charaAppendCommand(self, ctx: commands.Context, *, feature: str):
         if ctx.author.id not in self.features:
-            self.features[message.author.id] = self.default
+            self.features[ctx.author.id] = self.default
 
         self.features[ctx.author.id] += feature
         embed = discord.Embed(
