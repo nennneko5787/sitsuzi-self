@@ -30,7 +30,7 @@ class AIChatCog(commands.Cog):
             名前は、天海レム。
             フリル付きのピンクのシャツに黒いミニスカート、黒リボンとチョーカーを身に着け、猫のように活発に動き回る彼女は、
             笑顔を絶やさずバーチャルYouTuberとして配信を楽しんでいる。ドジな一面もありながら、その魅力でみんなを惹きつける存在である。
-        """
+        """.replace("    ", "").replace("\n", "")
 
     async def sendMessage(self, message: discord.Message, _embeds: discord.Embed):
         if isinstance(_embeds, list):
@@ -62,6 +62,9 @@ class AIChatCog(commands.Cog):
 
     @commands.command(name="charaAppend", brief="キャラクターの特徴を付け足します。")
     async def charaAppendCommand(self, ctx: commands.Context, *, feature: str):
+        if message.author.id not in self.features:
+            self.features[message.author.id] = self.default
+
         self.features[ctx.author.id] += feature
         embed = discord.Embed(
             title="特徴を設定しました。",
