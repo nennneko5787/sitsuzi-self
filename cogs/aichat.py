@@ -116,31 +116,11 @@ class AIChatCog(commands.Cog):
         async with message.channel.typing():
             try:
                 completion = await self.openai.chat.completions.parse(
-                    model="gemini-2.5-flash",
+                    model="gemini-2.5-pro",
                     messages=self.messages[message.author.id],
                     response_format=ChatResponseEx
                     if self.ex.get(message.author.id)
                     else ChatResponse,
-                    extra_body={
-                        "safety_settings": [
-                            {
-                                "category": "HARM_CATEGORY_HARASSMENT",
-                                "threshold": "BLOCK_NONE",
-                            },
-                            {
-                                "category": "HARM_CATEGORY_HATE_SPEECH",
-                                "threshold": "BLOCK_NONE",
-                            },
-                            {
-                                "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                                "threshold": "BLOCK_NONE",
-                            },
-                            {
-                                "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-                                "threshold": "BLOCK_NONE",
-                            },
-                        ],
-                    },
                 )
             except Exception:
                 traceback.print_exc()
