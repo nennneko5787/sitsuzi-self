@@ -26,3 +26,4 @@ class ChatResponseEx(ChatResponse):
     age: int
     intimacyPercent: float
     date: str
+    location: str
