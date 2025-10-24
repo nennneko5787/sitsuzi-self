@@ -172,7 +172,7 @@ class AIChatCog(commands.Cog):
                         【3S】 B{chat.threeSizes.b}W{chat.threeSizes.w}H{chat.threeSizes.h}
                         【親密度】 {chat.intimacyPercent}%
                         【日付】 {chat.date}
-                        【場所】{chat.location】
+                        【場所】{chat.location}
                     """.replace("    ", ""),
                     color=discord.Color.from_rgb(
                         chat.color.r, chat.color.g, chat.color.b
