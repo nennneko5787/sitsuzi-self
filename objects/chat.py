@@ -25,3 +25,4 @@ class ChatResponseEx(ChatResponse):
     heightCm: int
     age: int
     intimacyPercent: float
+    date: str
