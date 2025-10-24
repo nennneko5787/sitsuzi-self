@@ -100,7 +100,7 @@ class AIChatCog(commands.Cog):
             self.messages[message.author.id].append(
                 {
                     "role": "system",
-                    "content": "これはロールプレイです。あなたは↓に書いてある役になりきってください。\n\n"
+                    "content": "これはロールプレイです。\nintimacyPercentには0~100%までの値、dateには「○月○日」という形式で出力してください。あなたは↓に書いてある役になりきってください。\n\n"
                     + self.features[message.author.id],
                 }
             )
@@ -171,6 +171,8 @@ class AIChatCog(commands.Cog):
                         【体重】 {chat.weightKg}kg
                         【3S】 B{chat.threeSizes.b}W{chat.threeSizes.w}H{chat.threeSizes.h}
                         【親密度】 {chat.intimacyPercent}%
+                        【日付】 {chat.date}
+                        【場所】{chat.location】
                     """.replace("    ", ""),
                     color=discord.Color.from_rgb(
                         chat.color.r, chat.color.g, chat.color.b
