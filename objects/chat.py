@@ -8,7 +8,7 @@ class Color(BaseModel):
 
 
 class ChatResponse(BaseModel):
-    yourName: str
+    name: str
     message: str
     color: Color
 

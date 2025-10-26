@@ -60,6 +60,7 @@ class OneDayCog(commands.Cog):
             await f.write(json.dumps(self.gay))
 
     @commands.group(name="oneday", brief="1day-chatのツール類。")
+    @commands.cooldown(1, 10.0, commands.BucketType.guild)
     async def oneDayGroup(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
             await ctx.reply("サブコマンドを指定してね❤")
@@ -67,6 +68,7 @@ class OneDayCog(commands.Cog):
     @oneDayGroup.command(
         name="coinrank", brief="今までのコインロール取得回数のランキング。"
     )
+    @commands.cooldown(1, 10.0, commands.BucketType.guild)
     async def coinRanking(
         self,
         ctx: commands.Context,
@@ -103,6 +105,7 @@ class OneDayCog(commands.Cog):
     @oneDayGroup.command(
         name="spdrank", brief="今までのコインロール取得速度のランキング。"
     )
+    @commands.cooldown(1, 10.0, commands.BucketType.guild)
     async def speedRanking(
         self,
         ctx: commands.Context,
@@ -139,6 +142,7 @@ class OneDayCog(commands.Cog):
     @oneDayGroup.command(
         name="laterank", brief="今までのコインロール遅刻ポイントのランキング。"
     )
+    @commands.cooldown(1, 10.0, commands.BucketType.guild)
     async def lateRanking(
         self,
         ctx: commands.Context,
@@ -175,6 +179,7 @@ class OneDayCog(commands.Cog):
     @oneDayGroup.command(
         name="gayrank", brief="今までゲイロールが付与されたランキング。"
     )
+    @commands.cooldown(1, 10.0, commands.BucketType.guild)
     async def gayRanking(
         self,
         ctx: commands.Context,

@@ -24,7 +24,7 @@ class AIChatCog(commands.Cog):
         self.features: Dict[int, str] = {}
         self.messages: Dict[int, List[Dict[str, str]]] = {}
         self.ex: Dict[int, bool] = {}
-        
+
         self.default = """
             ピンクとパープルのマルチカラーの髪にアホ毛を揺らしながら、左目にアイパッチをつけた元気で愛らしい猫耳の女の子。
             名前は、天海レム。
@@ -41,6 +41,7 @@ class AIChatCog(commands.Cog):
         await message.reply(" ".join(embeds))
 
     @commands.command(name="ex", brief="Exモードを設定します。")
+    @commands.cooldown(1, 10.0, commands.BucketType.user)
     async def exCommand(self, ctx: commands.Context, *, ex: bool):
         self.ex[ctx.author.id] = ex
         embed = discord.Embed(
@@ -51,7 +52,8 @@ class AIChatCog(commands.Cog):
         await self.sendMessage(ctx.message, embed)
 
     @commands.command(name="chara", brief="キャラクターの特徴を設定します。")
-    async def charaCommand(self, ctx: commands.Context, feature: str):
+    @commands.cooldown(1, 10.0, commands.BucketType.user)
+    async def charaCommand(self, ctx: commands.Context, *, feature: str = ""):
         self.features[ctx.author.id] = feature
         embed = discord.Embed(
             title="特徴を設定しました。",
@@ -61,6 +63,7 @@ class AIChatCog(commands.Cog):
         await self.sendMessage(ctx.message, embed)
 
     @commands.command(name="charaAppend", brief="キャラクターの特徴を付け足します。")
+    @commands.cooldown(1, 10.0, commands.BucketType.user)
     async def charaAppendCommand(self, ctx: commands.Context, *, feature: str):
         if ctx.author.id not in self.features:
             self.features[ctx.author.id] = self.default
@@ -74,6 +77,7 @@ class AIChatCog(commands.Cog):
         await self.sendMessage(ctx.message, embed)
 
     @commands.command(name="reset", brief="会話履歴をリセットします。")
+    @commands.cooldown(1, 10.0, commands.BucketType.user)
     async def clearCommand(self, ctx: commands.Context):
         self.messages.pop(ctx.author.id, None)
         self.features[ctx.author.id] = self.default
@@ -134,7 +138,7 @@ class AIChatCog(commands.Cog):
             for char in splitByLength(chat.message, 100):
                 embeds.append(
                     discord.Embed(
-                        title=chat.yourName,
+                        title=chat.name,
                         description=char,
                         color=discord.Color.from_rgb(
                             chat.color.r, chat.color.g, chat.color.b

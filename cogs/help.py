@@ -1,5 +1,3 @@
-# ヘルプコマンドには興味がなかったのでChatGPTを使用しました
-
 from discord.ext import commands
 
 
@@ -8,92 +6,29 @@ class HelpCog(commands.Cog):
         self.bot = bot
 
     @commands.command(name="help", brief="このBotの使い方。")
-    async def helpCommand(self, ctx: commands.Context, option: str = None):
-        # ===============================
-        # option あり → 詳細ヘルプ表示
-        # ===============================
-        if option:
-            command = self.bot.all_commands.get(option)
-            if not command:
-                await ctx.message.reply(f"❌ コマンド `{option}` は見つかりませんでした。")
-                return
+    @commands.cooldown(1, 10.0, commands.BucketType.guild)
+    async def helpCommand(self, ctx: commands.Context):
+        await ctx.reply("""```ansi
+[2;35m[2;34m【[0m[2;35m天海㍕の[2;33mコマンド[0m[2;35m一覧[2;34m】[0m[2;35m
+[2;33m[2;36mprefix[0m[2;33m -> [2;36m[2;35mrem! [2;30m[2;37mプレフィクスをつけてコマンドを実行してください
+[0m[2;30m[0m[2;35m
+[2;30m-= AIと会話する機能 =-[0m[2;35m
+[2;36mex[0m[2;35m <[2;31mtrue[0m[2;35m/[2;35m[2;34mfalse[0m[2;35m[0m[2;35m> [2;37m[0;37mExモードを設定します。[0m[2;37m
+[2;36mchara [2;35m[<[2;33mstring[0m[2;35m>] [0m[2;36m[0m[2;37m[0m[2;35m[0m[2;36m[0m[2;33m[0m[2;35m[0m[2;37mキャラクターの特徴を設定します。何も指定しなかった場合特徴を設定しません。
+[2;36mcharaAppend [2;35m[<[2;33mstring[0m[2;35m>][0m[2;36m[0m[2;37m[0m[2;37m キャラクターの特徴を付け足します。
+[2;36mreset [0m[2;37m[0m[2;37m会話履歴をリセットします。
+【使い方】このボットにメンションまたはリプライする
+[2;30m
+-= (aa-bot限定)1day-chatの統計 =-
+[2;35m[2;33m[2;36m[2;35mtheme [0m[2;36m[0m[2;33m[0m[2;35m[2;33mLiteral[0m[2;35m[[0m[2;30m[0m[2;37m[2;35m[2;33m"ダーク"[2;35m,[0m[2;33m "ライト"[0m[2;35m] = [2;33m"ダーク"[0m[2;35m[0m[2;37m[0m
+[2;36m[2;35mtop [0m[2;36m[0m[2;35m[2;33mRange[0m[2;35m[[2;33mint[0m[2;35m, [2;33m1[0m[2;35m][0m[2;35m = [2;33m5[0m[2;35m[0m
 
-            # 通常コマンドの詳細情報
-            if isinstance(command, commands.Command) and not isinstance(
-                command, commands.Group
-            ):
-                brief = command.brief or "説明なし"
-                desc = command.help or "詳細説明はありません。"
-                signature = command.signature or "引数なし"
+[2;36m[2;34moneday [0m[2;36mcoinrank [2;35mtheme [0m[2;36m[2;35mtop [0m[2;36m[0m[2;37m今までのコインロール取得回数のランキング。
+[2;36m[2;34moneday [0m[2;36mspdrank [0m[2;37m[2;35mtheme [0m[2;37m[2;35mtop [0m[2;37m[0m[2;37m今までのコインロール取得速度のランキング。[0m
+[2;37m[2;36m[2;34moneday [0m[2;36mlaterank [2;35mtheme [0m[2;36m[2;35mtop [0m[2;36m[0m[2;37m[2;37m今までのコインロール遅刻ポイントのランキング。
+[2;36m[2;34moneday [0m[2;36mgayrank [2;35mtheme [0m[2;36m[2;35mtop [0m[2;36m[0m[2;37m[2;37m今までゲイロールが付与されたランキング。[0m[2;37m[0m[2;37m[0m
 
-                help_text = (
-                    f"```\n"
-                    f"{command.name} {brief}\n"
-                    f"{'-' * (len(command.name) + 1 + len(brief))}\n"
-                    f"{desc}\n"
-                    f"使用法: rin!{command.name} {signature}\n"
-                    f"```"
-                )
-
-            # グループコマンドの場合（サブコマンド一覧）
-            elif isinstance(command, commands.Group):
-                subcommands = command.commands
-                if not subcommands:
-                    help_text = f"```\n{command.name}: サブコマンドはありません。\n```"
-                else:
-                    max_len = max(len(c.name) for c in subcommands)
-                    help_text = f"```\n{command.name} のサブコマンド一覧:\n"
-                    for sub in subcommands:
-                        help_text += (
-                            f"  {sub.name.ljust(max_len)}  {sub.brief or '説明なし'}\n"
-                        )
-                    help_text += "```"
-
-            await ctx.message.reply(help_text)
-            return
-
-        # ===============================
-        # option なし → 全コマンド一覧表示
-        # ===============================
-        helpCommand = "```\n"
-
-        all_commands = list(self.bot.all_commands.values())
-        if not all_commands:
-            await ctx.message.reply("コマンドがありません")
-            return
-
-        max_len = max(len(c.name) for c in all_commands)
-
-        # コグごとに出力
-        for cogName, cog in self.bot.cogs.items():
-            commands_in_cog = [
-                (c.name, c.brief or "No description")
-                for c in cog.get_commands()
-                if not c.hidden
-            ]
-            if not commands_in_cog:
-                continue
-
-            helpCommand += f"{cogName}:\n"
-            for name, desc in commands_in_cog:
-                helpCommand += f"  {name.ljust(max_len)}  {desc}\n"
-            helpCommand += "\n"
-
-        # No Category（コグに属さないコマンド）
-        no_category_commands = [
-            (c.name, c.brief or "No description")
-            for c in self.bot.all_commands.values()
-            if c.cog_name is None and not c.hidden
-        ]
-        if no_category_commands:
-            helpCommand += "No Category:\n"
-            for name, desc in no_category_commands:
-                helpCommand += f"  {name.ljust(max_len)}  {desc}\n"
-            helpCommand += "\n"
-
-        helpCommand += "```"
-
-        await ctx.message.reply(helpCommand)
+```""")
 
 
 async def setup(bot: commands.Bot):
