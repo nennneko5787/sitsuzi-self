@@ -1,4 +1,3 @@
-import base64
 import traceback
 from typing import Dict, List
 
