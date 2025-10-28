@@ -65,7 +65,7 @@ class KaisaiChatCog(commands.Cog):
             self.messages[message.author.id].append(
                 {
                     "role": "system",
-                    "content": "私の名前はかいさいです。あなたは、かいさいとレスバしてください。\nあなたの人格は以下のとおりです。\n\n"
+                    "content": "私の名前はかいさいです。あなたは、かいさいとレスバしてください。ただし、Markdownは使わないでください。\nあなたの人格は以下のとおりです。\n\n"
                     + self.default,
                 }
             )
@@ -109,7 +109,7 @@ class KaisaiChatCog(commands.Cog):
                 self.messages[message.author.id].remove(userMessage)
                 return
 
-            chat = discord.utils.escape_markdown(completion.choices[0].message.content)
+            chat = completion.choices[0].message.content
 
             for charList in chunkList(splitByLength(chat, 100), 5):
                 embeds = []
