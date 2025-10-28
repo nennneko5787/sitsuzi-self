@@ -15,6 +15,11 @@ def splitByLength(s: str, n: int):
     return [s[i : i + n] for i in range(0, length, n)]
 
 
+def chunkList(lst: list, n: int):
+    """リストをn個ずつのサブリストに分割"""
+    return [lst[i : i + n] for i in range(0, len(lst), n)]
+
+
 class KaisaiChatCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -121,17 +126,18 @@ class KaisaiChatCog(commands.Cog):
                 self.messages[message.author.id].remove(userMessage)
                 return
 
-            chat = completion.choices[0].message.content
+            chat = discord.utils.escape_markdown(completion.choices[0].message.content)
 
             embeds = []
 
-            for char in splitByLength(chat, 100):
-                embeds.append(
-                    discord.Embed(
-                        description=char,
+            for charList in chunkList(splitByLength(chat, 100), 5):
+                for char in charList:
+                    embeds.append(
+                        discord.Embed(
+                            description=char,
+                        )
                     )
-                )
-            await self.sendMessage(message, embeds)
+                await self.sendMessage(message, embeds)
 
             self.messages[message.author.id].append(
                 {"role": "assistant", "content": completion.choices[0].message.content}
