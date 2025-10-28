@@ -111,9 +111,8 @@ class KaisaiChatCog(commands.Cog):
 
             chat = discord.utils.escape_markdown(completion.choices[0].message.content)
 
-            embeds = []
-
             for charList in chunkList(splitByLength(chat, 100), 5):
+                embeds = []
                 for char in charList:
                     embeds.append(
                         discord.Embed(
