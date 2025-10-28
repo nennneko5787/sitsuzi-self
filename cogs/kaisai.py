@@ -5,7 +5,6 @@ import discord
 from discord.ext import commands
 from openai import AsyncOpenAI
 
-from objects.chat import ChatResponse, ChatResponseEx
 from utils.embed import embedMaker
 
 
