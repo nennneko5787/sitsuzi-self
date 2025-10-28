@@ -93,7 +93,7 @@ class AIChatCog(commands.Cog):
             return
         if message.author.id == self.bot.user.id:
             return
-        if message.author.id != 1427189323983491164 and message.guild.id != 1403269573704290335:
+        if message.author.id == 1427189323983491164 and message.guild.id == 1403269573704290335:
             return
         inMentions = any(mention.id == self.bot.user.id for mention in message.mentions)
         if not inMentions and message.channel.type != discord.ChannelType.private:
