@@ -71,27 +71,11 @@ class KaisaiChatCog(commands.Cog):
                 }
             )
 
-        content = [
-            {
-                "type": "input_text",
-                "text": message.clean_content.removeprefix(
-                    f"@{self.bot.user.display_name}"
-                ),
-            }
-        ]
-
-        for attachment in message.attachments:
-            if attachment.content_type:
-                content.append(
-                    {
-                        "type": "input_image",
-                        "image_url": f"data:{attachment.content_type};base64,{base64.b64encode(await attachment.read()).decode()}",
-                    },
-                )
-
         userMessage = {
             "role": "user",
-            "content": content,
+            "content": message.clean_content.removeprefix(
+                f"@{self.bot.user.display_name}"
+            ),
         }
         self.messages[message.author.id].append(userMessage)
 
