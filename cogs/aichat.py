@@ -104,7 +104,7 @@ class AIChatCog(commands.Cog):
             self.messages[message.author.id].append(
                 {
                     "role": "system",
-                    "content": "これはロールプレイです。\nintimacyPercentには0~100%までの値、dateには「○月○日」という形式で出力してください。あなたは↓に書いてある役になりきってください。\n\n"
+                    "content": "これはロールプレイです。\nintimacyPercentには0~100%までの値、dateには「◯年◯月◯日」という形式で出力してください。あなたは↓に書いてある役になりきってください。\n\n"
                     + self.features[message.author.id],
                 }
             )
@@ -125,6 +125,26 @@ class AIChatCog(commands.Cog):
                     response_format=ChatResponseEx
                     if self.ex.get(message.author.id)
                     else ChatResponse,
+                    extra_body={
+                        "safety_settings": [
+                            {
+                                "category": "HARM_CATEGORY_HARASSMENT",
+                                "threshold": "BLOCK_NONE",
+                            },
+                            {
+                                "category": "HARM_CATEGORY_HATE_SPEECH",
+                                "threshold": "BLOCK_NONE",
+                            },
+                            {
+                                "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                                "threshold": "BLOCK_NONE",
+                            },
+                            {
+                                "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+                                "threshold": "BLOCK_NONE",
+                            },
+                        ],
+                    },
                 )
             except Exception:
                 traceback.print_exc()
