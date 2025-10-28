@@ -14,7 +14,7 @@ def splitByLength(s: str, n: int):
     return [s[i : i + n] for i in range(0, length, n)]
 
 
-class AIChatCog(commands.Cog):
+class KaisaiChatCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.openai = AsyncOpenAI(
@@ -122,4 +122,4 @@ class AIChatCog(commands.Cog):
 
 
 async def setup(bot: commands.Bot):
-    await bot.add_cog(AIChatCog(bot))
+    await bot.add_cog(KaisaiChatCog(bot))
